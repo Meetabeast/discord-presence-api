@@ -8,7 +8,7 @@ const Card = require("./card");
 const config = require("./config.json");
 
 let guildId = config.guild_id;
-let clientToken = config.guild_id;
+let clientToken = config.client_token;
 
 client.on("ready", () => {
     console.log("Ready");
