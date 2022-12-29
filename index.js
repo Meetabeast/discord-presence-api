@@ -6,12 +6,15 @@ const client = new Client({
 });
 const Card = require("./card");
 const config = require("./config.json");
+const imagetobase64 = require("image-to-base64");
+const { ActivityTypes, Themes } = require("./types");
 
 let guildId = config.guild_id;
 let clientToken = config.client_token;
 
 client.on("ready", () => {
     console.log("Ready");
+    client.user.setPresence({ status: "invisible" })
 })
 
 app.use(express.json());
@@ -23,7 +26,7 @@ app.get("/", (req, res) => {
     })
 });
 
-app.get('/api/:userId', async (req, res) => {
+app.get('/presence/:userId', async (req, res) => {
     let userId = req.params.userId;
 
     if(!userId) {
@@ -48,81 +51,78 @@ app.get('/api/:userId', async (req, res) => {
             message: "The user a bot"
         })
     }
+    
+    if(!member.presence) {
+        return res.json({
+            status: 200,
+            user: {
+                username: member.user.username,
+                discriminator: member.user.discriminator,
+                avatar: member.user.displayAvatarURL(),
+                id: member.user.id
+            },
+            activity: {}
+        })
+    }
 
     let stat = member.presence.activities[0];
-    let custom;
 
     if(!stat) {
         return res.json({
-            status: 404,
-            message: "Please try again"
+            status: 200,
+            user: {
+                username: member.user.username,
+                discriminator: member.user.discriminator,
+                avatar: member.user.displayAvatarURL({ extension: "png"}),
+                id: member.user.id
+            },
+            activity: {}
         })
     }
 
-    if(member.presence.activities.some(r => r.name === "Spotify")) {
-        let spotifyArray = {
-            user: {
-                username: member.user.username,
-                discriminator: member.user.discriminator,
-                avatar: member.user.displayAvatarURL({ extension: "png" }),
-                id: member.id
-            },
-            presenceName: `Listening to Spotify`,
-            name: stat.name,
-            applicationId: stat.applicationId,
-            details: stat.details,
-            state: stat.state,
-            timestamps: stat.timestamps,
-            assets: {
-                largeText: stat.assets.largeText,
-                smallText: stat.assets.smallText,
-                largeImage: stat.assets.largeImage,
-                smallImage: stat.assets.smallImage
-            },
-            createdTimestamp: stat.createdTimestamp
-        }
+    let largeImage = false;
 
-        custom = spotifyArray
-    } else if(stat && stat.name !== "Custom Status") {
-        let customArray = {
-            user: {
-                username: member.user.username,
-                discriminator: member.user.discriminator,
-                avatar: member.user.displayAvatarURL({ extension: "png" }),
-                id: member.id
-            },
-            name: stat.name ?? "None",
-            applicationId: stat.applicationId ?? "None",
-            details: stat.details ?? "None",
-            state: stat.state ?? "None",
-            assets: {
-                largeText: stat.assets.largeText || "None",
-                smallText: stat.assets.smallText || "None",
-                largeImage: stat.assets.largeImage || "None",
-                smallImage: stat.assets.smallImage ?? "None"
-            },
-            createdTimestamp: stat.createdTimestamp ?? "None",
-        }
-
-        custom = customArray
+    if(member.presence.activities.some(r => r.name === "Spotify")) { 
+        largeImage = `https://i.scdn.co/image/${stat.assets.largeImage.replace("spotify:", "")}`
     } else {
-        custom = "Nothing"
+        largeImage = `https://cdn.discordapp.com/app-assets/${stat.applicationId}/${stat.assets.largeImage}.png`
     }
+    
+    let smallImage = stat.assets.smallImage ? `https://cdn.discordapp.com/app-assets/${stat.applicationId}/${stat.assets.smallImage}.png` : ""
+    let state = stat.state ? stat.state : "";
+    let details = stat.details ? stat.details : "";
+    let type = stat.type ? stat.type : "";
 
-    if(member.presence.activities.some(r => r.name !== "Spotify") && stat && stat.state !== null) {
-        stat = stat.state
-    } else {
-        stat = "Nothing"
-    }
+    let avatar = member.user.displayAvatarURL({ extension: "png" });
 
     return res.json({
         status: 200,
-        activity: custom
+        user: {
+            username: member.user.username,
+            id: member.user.id,
+            avatar: avatar,
+            discriminator: member.user.discriminator
+        },
+        activity: {
+            name: stat.name,
+            stat: state,
+            details: details,
+            largeImage: largeImage,
+            smallImage: smallImage,
+            type: ActivityTypes[type]
+        }
     })
-});
+})
 
-app.get('/api/:userId/card', async (req, res) => {
+app.get('/presence/:userId/card', async (req, res) => {
     let userId = req.params.userId;
+    let theme = req.query.theme;
+
+    theme = Themes[theme];
+
+    if(!theme) {
+        theme = "Dark"
+    } 
 
     if(!userId) {
         return res.json({
@@ -146,92 +146,67 @@ app.get('/api/:userId/card', async (req, res) => {
             message: "The user a bot"
         })
     }
+    
+    if(!member.presence) {
+        return res.json({
+            status: 200,
+            user: {
+                username: member.user.username,
+                discriminator: member.user.discriminator,
+                avatar: member.user.displayAvatarURL(),
+                id: member.user.id
+            },
+            activity: {}
+        })
+    }
 
     let stat = member.presence.activities[0];
-    let custom;
 
-    if(member.presence.activities.some(r => r.name === "Spotify")) {
-        let spotifyArray = {
+    if(!stat) {
+        return res.json({
+            status: 200,
             user: {
                 username: member.user.username,
                 discriminator: member.user.discriminator,
-                avatar: member.user.displayAvatarURL({ extension: "png" }),
-                id: member.id
+                avatar: member.user.displayAvatarURL({ extension: "png"}),
+                id: member.user.id
             },
-            presenceName: `Listening to Spotify`,
-            name: stat.name,
-            applicationId: stat.applicationId,
-            details: stat.details,
-            state: stat.state,
-            timestamps: {
-                start: stat.timestamps.start,
-                end: stat.timestamps.end
-            },
-            assets: {
-                largeText: stat.assets.largeText,
-                smallText: stat.assets.smallText,
-                largeImage: stat.assets.largeImage,
-                smallImage: stat.assets.smallImage
-            },
-            createdTimestamp: stat.createdTimestamp
-        }
-
-        let card = new Card({
-            username: spotifyArray.user.username,
-            discriminator: spotifyArray.user.discriminator,
-            avatar: spotifyArray.user.avatar,
-            applicationId: spotifyArray.applicationId,
-            details: spotifyArray.details,
-            name: spotifyArray.name,
-            state: spotifyArray.state,
-            assetsIcon: spotifyArray.assets.largeImage
+            activity: {}
         })
-
-        custom = card.spotifyRender()
-    } else if(stat && stat.name !== "Custom Status") {
-        let customArray = {
-            user: {
-                username: member.user.username,
-                discriminator: member.user.discriminator,
-                avatar: member.user.displayAvatarURL({ extension: "png" }),
-                id: member.id
-            },
-            name: stat.name ?? "None",
-            applicationId: stat.applicationId ?? "None",
-            details: stat.details ?? "None",
-            state: stat.state ?? "None",
-            assets: {
-                largeText: stat.assets.largeText ?? "None",
-                smallText: stat.assets.smallText ?? "None",
-                largeImage: stat.assets.largeImage ?? "None",
-                smallImage: stat.assets.smallImage ?? "None"
-            },
-            createdTimestamp: stat.createdTimestamp ?? "None",
-        }
-
-        let card = new Card({
-            username: customArray.user.username,
-            discriminator: customArray.user.discriminator,
-            avatar: customArray.user.avatar,
-            applicationId: customArray.applicationId,
-            details: customArray.details,
-            name: customArray.name,
-            state: customArray.state,
-            assetsIcon: customArray.assets.largeImage
-        })
-
-        custom = card.customRender()
-    } else {
-        custom = "Nothing"
     }
 
-    if(member.presence.activities.some(r => r.name !== "Spotify") && stat && stat.state !== null) {
-        stat = stat.state
+    let largeImage = false;
+
+    if(member.presence.activities.some(r => r.name === "Spotify")) { 
+        largeImage = `https://i.scdn.co/image/${stat.assets.largeImage.replace("spotify:", "")}`
     } else {
-        stat = "Nothing"
+        largeImage = `https://cdn.discordapp.com/app-assets/${stat.applicationId}/${stat.assets.largeImage}.png`
     }
 
-    return res.send(custom)
+    let state = stat.state ? stat.state : "";
+    let details = stat.details ? stat.details : "";
+
+    let avatar = member.user.displayAvatarURL({ extension: "png" });
+    avatar = await imagetobase64(avatar);
+    avatar = "data:image/png;base64," + avatar
+
+    largeImage = await imagetobase64(largeImage);
+    largeImage = "data:image/png;base64," + largeImage
+
+    let custom = new Card({
+        avatar: avatar,
+        username: member.user.username,
+        discriminator: member.user.discriminator,
+        name: stat.name,
+        details: details,
+        state: state,
+        assetsIcon: largeImage,
+        theme: theme
+    })
+
+    res.set("Cache-Control", "public, max-age=30");
+    res.set("Content-Type", "image/svg+xml")
+    res.send(custom.render())
 })
 
 app.get("*", (req, res) => {
@@ -243,4 +218,4 @@ app.get("*", (req, res) => {
 
 client.login(clientToken);
 const port = 9001;
-app.listen(port, () => console.log(`Listening to port ${port}`))
+app.listen(port, () => console.log(`Listening to port ${port}`));
