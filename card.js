@@ -1,13 +1,15 @@
+const { Themes } = require("./types")
+
 class Card {
     constructor({
         username,
         discriminator,
         name,
-        applicationId,
         details,
         state,
         avatar,
-        assetsIcon
+        assetsIcon,
+        theme
     }) {
         this.username = username;
         this.discriminator = discriminator;
@@ -16,175 +18,153 @@ class Card {
         this.state = state;
         this.avatar = avatar;
         this.assetsIcon = assetsIcon;
-        this.applicationId = applicationId;
+        this.theme = theme;
+    }
+    
+    render() {
+        switch(this.theme) {
+            case "Dark": {
+                return `
+                    <svg xmlns="http://www.w3.org/2000/svg" width="500" height="300" style="background-color: rgb(21, 23, 33); border-radius: 10px;" viewBox="0 0 500 300">
+                        <image x="10" y="10" width="75" height="75" href="${this.avatar}" clip-path="inset(0% round 50%)" />
+                        <text x="90" y="55" fill="rgb(255, 255, 255)" font-weight="bold" font-family="Arial" font-size="28px">${this.username}#${this.discriminator}</text>
+                        <image x="-40" y="150" width="200" height="100" href="${this.assetsIcon}" clip-path="inset(0% round 10px)"/>
+                        <text x="117" y="165" fill="rgb(255, 255, 255)" font-weight="bold" font-family="Arial">${this.name}</text>
+                        <text x="117" y="190" fill="rgb(255, 255, 255)" font-family="Arial">${this.details}</text>
+                        <text x="117" y="220" fill="rgb(255, 255, 255)" font-family="Arial">${this.state}</text>
+                    </svg>
+                `
+            }
+            break;
+            case "White": {
+                return `<svg xmlns="http://www.w3.org/2000/svg" width="500" height="300" style="background-color: rgb(255, 255, 255); border-radius: 10px;" viewBox="0 0 500 300">
+                    <image x="10" y="10" width="75" height="75" href="${this.avatar}" clip-path="inset(0% round 50%)" />
+                    <text x="90" y="55" fill="rgb(0, 0, 0)" font-weight="bold" font-family="Arial" font-size="28px">${this.username}#${this.discriminator}</text>
+                    <image x="-40" y="150" width="200" height="100" href="${this.assetsIcon}" clip-path="inset(0% round 10px)"/>
+                    <text x="117" y="165" fill="rgb(0, 0, 0)" font-weight="bold" font-family="Arial">${this.name}</text>
+                    <text x="117" y="190" fill="rgb(0, 0, 0)" font-family="Arial">${this.details}</text>
+                    <text x="117" y="220" fill="rgb(0, 0, 0)" font-family="Arial">${this.state}</text>
+                </svg>
+                `
+            }
+            break;
+            case "Transparent": {
+                return `<svg xmlns="http://www.w3.org/2000/svg" width="500" height="300" style="background-color: transparent; border-radius: 10px;" viewBox="0 0 500 300">
+                    <image x="10" y="10" width="75" height="75" href="${this.avatar}" clip-path="inset(0% round 50%)" />
+                    <text x="90" y="55" fill="rgb(0, 0, 0)" font-weight="bold" font-family="Arial" font-size="28px">${this.username}#${this.discriminator}</text>
+                    <image x="-40" y="150" width="200" height="100" href="${this.assetsIcon}" clip-path="inset(0% round 10px)"/>
+                    <text x="117" y="165" fill="rgb(0, 0, 0)" font-weight="bold" font-family="Arial">${this.name}</text>
+                    <text x="117" y="190" fill="rgb(0, 0, 0)" font-family="Arial">${this.details}</text>
+                    <text x="117" y="220" fill="rgb(0, 0, 0)" font-family="Arial">${this.state}</text>
+                </svg>`
+            }
+            break;
+            case "Red": {
+                return `<svg xmlns="http://www.w3.org/2000/svg" width="500" height="300" style="background-color: rgb(21, 23, 33); border-radius: 10px;" viewBox="0 0 500 300">
+                <image x="10" y="10" width="75" height="75" href="${this.avatar}" clip-path="inset(0% round 50%)" />
+                <text x="90" y="55" fill="rgb(219, 20, 20)" font-weight="bold" font-family="Arial" font-size="28px">${this.username}#${this.discriminator}</text>
+                <image x="-40" y="150" width="200" height="100" href="${this.assetsIcon}" clip-path="inset(0% round 10px)"/>
+                <text x="117" y="165" fill="rgb(219, 20, 20)" font-weight="bold" font-family="Arial">${this.name}</text>
+                <text x="117" y="190" fill="rgb(219, 20, 20)" font-family="Arial">${this.details}</text>
+                <text x="117" y="220" fill="rgb(219, 20, 20)" font-family="Arial">${this.state}</text>
+                </svg>`
+            }
+            break;
+            case "Green": {
+                return `<svg xmlns="http://www.w3.org/2000/svg" width="500" height="300" style="background-color: rgb(21, 23, 33); border-radius: 10px;" viewBox="0 0 500 300">
+                <image x="10" y="10" width="75" height="75" href="${this.avatar}" clip-path="inset(0% round 50%)" />
+                <text x="90" y="55" fill="rgb(51, 153, 51)" font-weight="bold" font-family="Arial" font-size="28px">${this.username}#${this.discriminator}</text>
+                <image x="-40" y="150" width="200" height="100" href="${this.assetsIcon}" clip-path="inset(0% round 10px)"/>
+                <text x="117" y="165" fill="rgb(51, 153, 51)" font-weight="bold" font-family="Arial">${this.name}</text>
+                <text x="117" y="190" fill="rgb(51, 153, 51)" font-family="Arial">${this.details}</text>
+                <text x="117" y="220" fill="rgb(51, 153, 51)" font-family="Arial">${this.state}</text>
+                </svg>`
+            }
+            break;
+            case "Blue": {
+                return `<svg xmlns="http://www.w3.org/2000/svg" width="500" height="300" style="background-color: rgb(21, 23, 33); border-radius: 10px;" viewBox="0 0 500 300">
+                <image x="10" y="10" width="75" height="75" href="${this.avatar}" clip-path="inset(0% round 50%)" />
+                <text x="90" y="55" fill="rgb(0, 204, 255)" font-weight="bold" font-family="Arial" font-size="28px">${this.username}#${this.discriminator}</text>
+                <image x="-40" y="150" width="200" height="100" href="${this.assetsIcon}" clip-path="inset(0% round 10px)"/>
+                <text x="117" y="165" fill="rgb(0, 204, 255)" font-weight="bold" font-family="Arial">${this.name}</text>
+                <text x="117" y="190" fill="rgb(0, 204, 255)" font-family="Arial">${this.details}</text>
+                <text x="117" y="220" fill="rgb(0, 204, 255)" font-family="Arial">${this.state}</text>
+            </svg>`
+            }
+        }
     }
 
-    customRender() {
-        return `<html lang="en">
-        <head>
-            <meta charset="UTF-8">
-            <meta http-equiv="X-UA-Compatible" content="IE=edge">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Document</title>
-        
-            <style>
-                * {
-                    padding: 0;
-                    margin: 0;
-                }
-        
-                body {
-                    font-family: Arial, sans-serif;
-                }
-        
-                .card {
-                    background-color: rgb(21, 23, 33);
-                    color: rgb(255, 255, 255);
-                    margin: 20px;
-                    padding: 10px 10px;
-                    height: 300px;
-                    width: 500px;
-                    border-radius: 15px;
-                }
-        
-                .user {
-                    display: flex;
-                    align-items: center;
-                }
-        
-                .username {
-                    padding-left: 10px;
-                }
-        
-                .avatar {
-                    width: 75px;
-                    height: 75px;
-                    border-radius: 50%;
-                }
-        
-                .presence {
-                    display: flex;
-                    padding-top: 50px;
-                }
-        
-                .info {
-                    display: flex;
-                    flex-direction: column;
-                    padding-left: 5px;
-                    line-height: 1.5;
-                }
-        
-                .presenceIcon {
-                    width: 150px;
-                    height: 150px;
-                    border-radius: 10px;
-                }
-            </style>
-        </head>
-        <body>
-            <div class="card">
-                <div class="content">
-                    <div class="user">
-                        <img src="${this.avatar}" alt="avatar" class="avatar">
-                        <h2 class="username">${this.username}#${this.discriminator}</h2>
-                    </div>
-        
-                    <div class="presence">
-                        <img src="https://cdn.discordapp.com/app-assets/${this.applicationId}/${this.assetsIcon}.png" alt="presenceIcon" class="presenceIcon">
-        
-                        <div class="info">
-                            <h4 class="name">${this.name}</h4>
-                            <p class="details">${this.details}</p>
-                            <p class="state">${this.state}</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </body>
-        
-        
-        </html>`
-    }
-
-    spotifyRender() {
-        return `
-        <html lang="en">
-        <head>
-            <style>
-                * {
-                    padding: 0;
-                    margin: 0;
-                }
-        
-                body {
-                    font-family: Arial, sans-serif;
-                }
-        
-                .card {
-                    background-color: rgb(21, 23, 33);
-                    color: rgb(255, 255, 255);
-                    margin: 20px;
-                    padding: 10px 10px;
-                    height: 300px;
-                    width: 500px;
-                    border-radius: 15px;
-                }
-        
-                .user {
-                    display: flex;
-                    align-items: center;
-                }
-        
-                .username {
-                    padding-left: 10px;
-                }
-        
-                .avatar {
-                    width: 75px;
-                    height: 75px;
-                    border-radius: 50%;
-                }
-        
-                .presence {
-                    display: flex;
-                    padding-top: 50px;
-                }
-        
-                .info {
-                    display: flex;
-                    flex-direction: column;
-                    padding-left: 5px;
-                    line-height: 1.5;
-                }
-        
-                .presenceIcon {
-                    width: 150px;
-                    height: 150px;
-                    border-radius: 10px;
-                }
-            </style>
-        </head>
-        <body>
-            <div class="card">
-                <div class="content">
-                    <div class="user">
-                        <img src="${this.avatar}" alt="avatar" class="avatar">
-                        <h2 class="username">${this.username}#${this.discriminator}</h2>
-                    </div>
-        
-                    <div class="presence">
-                        <img src="https://i.scdn.co/image/${this.assetsIcon.replace("spotify:", "")}" alt="presenceIcon" class="presenceIcon">
-                        
-                        <div class="info">
-                            <h4 class="name">${this.name}</h4>
-                            <p class="details">${this.details}</p>
-                            <p class="state">${this.state}</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </body>
-        </html>`
+    rendernewCards() {
+        switch(this.theme) {
+            case "Dark": {
+                return `
+                    <svg xmlns="http://www.w3.org/2000/svg" width="500" height="300" style="background-color: rgb(21, 23, 33); border-radius: 10px;" viewBox="0 0 500 300">
+                        <image x="10" y="10" width="75" height="75" href="${this.avatar}" clip-path="inset(0% round 50%)" />
+                        <text x="90" y="55" fill="rgb(255, 255, 255)" font-weight="bold" font-family="Arial" font-size="28px">${this.username}#${this.discriminator}</text>
+                        <image x="-40" y="150" width="200" height="100" href="${this.assetsIcon}" clip-path="inset(0% round 10px)"/>
+                        <text x="117" y="165" fill="rgb(255, 255, 255)" font-weight="bold" font-family="Arial">${this.name}</text>
+                        <text x="117" y="190" fill="rgb(255, 255, 255)" font-family="Arial">${this.details}</text>
+                        <text x="117" y="220" fill="rgb(255, 255, 255)" font-family="Arial">${this.state}</text>
+                    </svg>
+                `
+            }
+            break;
+            case "White": {
+                return `<svg xmlns="http://www.w3.org/2000/svg" width="500" height="300" style="background-color: rgb(255, 255, 255); border-radius: 10px;" viewBox="0 0 500 300">
+                    <image x="10" y="10" width="75" height="75" href="${this.avatar}" clip-path="inset(0% round 50%)" />
+                    <text x="90" y="55" fill="rgb(0, 0, 0)" font-weight="bold" font-family="Arial" font-size="28px">${this.username}#${this.discriminator}</text>
+                    <image x="-40" y="150" width="200" height="100" href="${this.assetsIcon}" clip-path="inset(0% round 10px)"/>
+                    <text x="117" y="165" fill="rgb(0, 0, 0)" font-weight="bold" font-family="Arial">${this.name}</text>
+                    <text x="117" y="190" fill="rgb(0, 0, 0)" font-family="Arial">${this.details}</text>
+                    <text x="117" y="220" fill="rgb(0, 0, 0)" font-family="Arial">${this.state}</text>
+                </svg>
+                `
+            }
+            break;
+            case "Transparent": {
+                return `<svg xmlns="http://www.w3.org/2000/svg" width="500" height="300" style="background-color: transparent; border-radius: 10px;" viewBox="0 0 500 300">
+                    <image x="10" y="10" width="75" height="75" href="${this.avatar}" clip-path="inset(0% round 50%)" />
+                    <text x="90" y="55" fill="rgb(0, 0, 0)" font-weight="bold" font-family="Arial" font-size="28px">${this.username}#${this.discriminator}</text>
+                    <image x="-40" y="150" width="200" height="100" href="${this.assetsIcon}" clip-path="inset(0% round 10px)"/>
+                    <text x="117" y="165" fill="rgb(0, 0, 0)" font-weight="bold" font-family="Arial">${this.name}</text>
+                    <text x="117" y="190" fill="rgb(0, 0, 0)" font-family="Arial">${this.details}</text>
+                    <text x="117" y="220" fill="rgb(0, 0, 0)" font-family="Arial">${this.state}</text>
+                </svg>`
+            }
+            break;
+            case "Red": {
+                return `<svg xmlns="http://www.w3.org/2000/svg" width="500" height="300" style="background-color: rgb(21, 23, 33); border-radius: 10px;" viewBox="0 0 500 300">
+                <image x="10" y="10" width="75" height="75" href="${this.avatar}" clip-path="inset(0% round 50%)" />
+                <text x="90" y="55" fill="rgb(219, 20, 20)" font-weight="bold" font-family="Arial" font-size="28px">${this.username}#${this.discriminator}</text>
+                <image x="-40" y="150" width="200" height="100" href="${this.assetsIcon}" clip-path="inset(0% round 10px)"/>
+                <text x="117" y="165" fill="rgb(219, 20, 20)" font-weight="bold" font-family="Arial">${this.name}</text>
+                <text x="117" y="190" fill="rgb(219, 20, 20)" font-family="Arial">${this.details}</text>
+                <text x="117" y="220" fill="rgb(219, 20, 20)" font-family="Arial">${this.state}</text>
+                </svg>`
+            }
+            break;
+            case "Green": {
+                return `<svg xmlns="http://www.w3.org/2000/svg" width="500" height="300" style="background-color: rgb(21, 23, 33); border-radius: 10px;" viewBox="0 0 500 300">
+                <image x="10" y="10" width="75" height="75" href="${this.avatar}" clip-path="inset(0% round 50%)" />
+                <text x="90" y="55" fill="rgb(51, 153, 51)" font-weight="bold" font-family="Arial" font-size="28px">${this.username}#${this.discriminator}</text>
+                <image x="-40" y="150" width="200" height="100" href="${this.assetsIcon}" clip-path="inset(0% round 10px)"/>
+                <text x="117" y="165" fill="rgb(51, 153, 51)" font-weight="bold" font-family="Arial">${this.name}</text>
+                <text x="117" y="190" fill="rgb(51, 153, 51)" font-family="Arial">${this.details}</text>
+                <text x="117" y="220" fill="rgb(51, 153, 51)" font-family="Arial">${this.state}</text>
+                </svg>`
+            }
+            break;
+            case "Blue": {
+                return `<svg xmlns="http://www.w3.org/2000/svg" width="500" height="300" style="background-color: rgb(21, 23, 33); border-radius: 10px;" viewBox="0 0 500 300">
+                <image x="10" y="10" width="75" height="75" href="${this.avatar}" clip-path="inset(0% round 50%)" />
+                <text x="90" y="55" fill="rgb(0, 204, 255)" font-weight="bold" font-family="Arial" font-size="28px">${this.username}#${this.discriminator}</text>
+                <image x="-40" y="150" width="200" height="100" href="${this.assetsIcon}" clip-path="inset(0% round 10px)"/>
+                <text x="117" y="165" fill="rgb(0, 204, 255)" font-weight="bold" font-family="Arial">${this.name}</text>
+                <text x="117" y="190" fill="rgb(0, 204, 255)" font-family="Arial">${this.details}</text>
+                <text x="117" y="220" fill="rgb(0, 204, 255)" font-family="Arial">${this.state}</text>
+            </svg>`
+            }
+        }
     }
 }
 
