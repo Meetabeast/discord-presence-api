@@ -6,7 +6,7 @@ The API processes your current activity on your Discord account and creates a ca
 2. So that we can get your current discord status, it is important that you join our [discord server](https://discord.com/).
 3. Now you can write the following URL in your readme:
 ```
-![Discord Presence](<your domain>)
+![Discord Presence](<your domain>/presence/< your user id>/card)
 ```
 
 # Card Styles
