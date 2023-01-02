@@ -6,7 +6,7 @@ The API processes your current activity on your Discord account and creates a ca
 2. So that we can get your current discord status, it is important that you join our [discord server](https://discord.com/).
 3. Now you can write the following URL in your readme:
 ```
-![Discord Presence](https://google.com)
+![Discord Presence](<your domain>)
 ```
 
 # Card Styles
@@ -14,7 +14,7 @@ So that your card also has the perfect style. We have different styles available
 
 In order for you to be able to select the different styles, the URL must look like this:
 ```
-https://google.com/presence/< your user id>/card?theme=white
+<your domain>/presence/< your user id>/card?theme=white
 ```
 The following styles are available: `dark`, `white`, `transparent`, `blue`, `green`, `red`
 
